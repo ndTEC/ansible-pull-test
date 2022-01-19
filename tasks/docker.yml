@@ -1,0 +1,64 @@
+---
+- name: Install dependencies
+  apt:
+    name:
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+
+- name: Remove old versions
+  apt:
+    name:
+    - docker
+    - docker-engine
+    - docker-io
+    - containerd
+    - runc
+    state: absent
+
+- name: Add docker key
+  shell: 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg'
+  args:
+    warn: false
+  changed_when: false
+- name: Add repo
+  shell: 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null'
+  args:
+    warn: false
+  changed_when: false
+
+- name: Update repo
+  apt:
+    update_cache: true
+
+- name: Install docker engine
+  apt:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    state: present
+
+- name: Start end enable docker
+  service:
+    name: docker
+    state: started
+    enabled: true
+  no_log: true
+
+- name: Install docker-compose
+  shell: 'curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+  args:
+    warn: false
+  changed_when: false
+
+- name: Make executable
+  file:
+    path: '/usr/local/bin/docker-compose'
+    mode: u+x,g+x,o+x
+- name: Make sym link
+  file:
+    src: '/usr/local/bin/docker-compose'
+    dest: '/usr/bin/docker-compose'
+    state: link
