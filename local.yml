@@ -1,6 +1,8 @@
-- hosts: all
+- hosts: localhost
   connection: local
   become: true
+  vars_files:
+    - secrets
   pre_tasks:
     - name: Update repo on Ubuntu
       apt: 
