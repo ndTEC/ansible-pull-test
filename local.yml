@@ -2,12 +2,14 @@
   connection: localhost
   become: true
   pre_tasks:
-    - name: update repositories
+    - name: Update repo on Ubuntu
       apt: 
-        update_cache: true
-        upgrade: yes
-        state: latest
-
+        update_cache: yes
+        force_apt_get: yes
+    - name: Upgrade Ubuntu
+      apt:
+        upgrade: dist
+        force_apt_get: yes
   tasks:
     - include: tasks/packages.yml
 
