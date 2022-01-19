@@ -5,7 +5,7 @@
     - name: update repositories
       apt: 
         update_cache: true
-        upgrade: true
+        upgrade: yes
         state: latest
 
   tasks:
