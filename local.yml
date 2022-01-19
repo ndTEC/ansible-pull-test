@@ -1,5 +1,5 @@
 - hosts: localhost
-  connection: localhost
+  connection: local
   become: true
   pre_tasks:
     - name: Update repo on Ubuntu
