@@ -1,5 +1,5 @@
-- hosts: all
-#  connection: local
+- hosts: localhost
+  connection: local
   become: true
   vars_files:
     - secrets
